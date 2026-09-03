@@ -1,0 +1,31 @@
+<%# app/views/shared/_button.html.erb %>
+<%# Usage: render "shared/button", label: "Add Product", icon: "fa-plus", variant: "primary", size: "md", path: "#", type: "link" %>
+<% variant ||= "primary" %>
+<% size ||= "md" %>
+<% type ||= "link" %>
+
+<% base_classes = "inline-flex items-center justify-center font-medium rounded-md focus:outline-none transition-colors" %>
+<% size_classes = case size
+  when "sm" then "px-3 py-1.5 text-xs"
+  when "md" then "px-4 py-2 text-sm"
+  when "lg" then "px-5 py-2.5 text-base"
+  else "px-4 py-2 text-sm"
+  end %>
+<% variant_classes = case variant
+  when "primary" then "bg-indigo-600 text-white hover:bg-indigo-700 focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+  when "secondary" then "bg-white text-slate-700 border border-slate-300 hover:bg-slate-50 focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+  when "danger" then "bg-red-600 text-white hover:bg-red-700 focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+  else "bg-indigo-600 text-white hover:bg-indigo-700"
+  end %>
+
+<% if type == "button" %>
+  <button class="<%= base_classes %> <%= size_classes %> <%= variant_classes %>">
+    <% if icon %><i class="fas <%= icon %> mr-2"></i><% end %>
+    <%= label %>
+  </button>
+<% else %>
+  <%= link_to path, class: "#{base_classes} #{size_classes} #{variant_classes}" do %>
+    <% if icon %><i class="fas <%= icon %> mr-2"></i><% end %>
+    <%= label %>
+  <% end %>
+<% end %>

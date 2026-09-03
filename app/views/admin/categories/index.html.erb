@@ -1,0 +1,63 @@
+<% content_for :page_title, "Categories" %>
+
+<%= render "shared/page_header", title: "Categories", subtitle: "Manage your product categories" do %>
+  <%= render "shared/button", label: "New Category", icon: "fa-plus", variant: "primary", size: "md", path: new_admin_category_path %>
+<% end %>
+
+<% if @categories.any? %>
+  <div class="bg-white rounded-lg shadow-sm border border-slate-200 overflow-hidden">
+    <div class="overflow-x-auto">
+      <table class="min-w-full divide-y divide-slate-200">
+        <thead class="bg-slate-50">
+          <tr>
+            <th class="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Name</th>
+            <th class="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Description</th>
+            <th class="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Products</th>
+            <th class="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Created</th>
+            <th class="px-4 py-3 text-right text-xs font-medium text-slate-500 uppercase tracking-wider">Actions</th>
+          </tr>
+        </thead>
+        <tbody class="bg-white divide-y divide-slate-200">
+          <% @categories.each do |category| %>
+            <tr class="hover:bg-slate-50 transition-colors">
+              <td class="px-4 py-4 whitespace-nowrap text-sm font-medium text-slate-900">
+                <%= link_to category.name, admin_category_path(category), class: "hover:text-indigo-600" %>
+              </td>
+              <td class="px-4 py-4 text-sm text-slate-500">
+                <%= category.description.presence ? truncate(category.description, length: 50) : "—" %>
+              </td>
+              <td class="px-4 py-4 whitespace-nowrap text-sm text-slate-500">
+                <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-slate-100 text-slate-800">
+                  <%= category.products.size %>
+                </span>
+              </td>
+              <td class="px-4 py-4 whitespace-nowrap text-sm text-slate-500">
+                <%= category.created_at.strftime("%b %d, %Y") %>
+              </td>
+              <td class="px-4 py-4 whitespace-nowrap text-right text-sm font-medium">
+                <div class="flex justify-end space-x-2">
+                  <%= link_to admin_category_path(category), class: "text-indigo-600 hover:text-indigo-900", title: "View" do %>
+                    <i class="fas fa-eye"></i>
+                  <% end %>
+                  <%= link_to edit_admin_category_path(category), class: "text-amber-600 hover:text-amber-900", title: "Edit" do %>
+                    <i class="fas fa-edit"></i>
+                  <% end %>
+                  <%= button_to admin_category_path(category), method: :delete, class: "text-red-600 hover:text-red-900", title: "Delete", data: { turbo_confirm: "Are you sure you want to delete this category?" } do %>
+                    <i class="fas fa-trash"></i>
+                  <% end %>
+                </div>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+      <%= render "shared/pagination", pagy: @pagy %>
+    </div>
+  </div>
+<% else %>
+  <div class="bg-white rounded-lg shadow-sm border border-slate-200 p-8 text-center">
+    <i class="fas fa-tags text-4xl text-slate-300 mb-3"></i>
+    <p class="text-slate-500 mb-4">No categories yet. Create your first category to organize products.</p>
+    <%= render "shared/button", label: "New Category", icon: "fa-plus", variant: "primary", size: "md", path: new_admin_category_path %>
+  </div>
+<% end %>

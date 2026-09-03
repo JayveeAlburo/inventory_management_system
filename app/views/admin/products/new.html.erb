@@ -1,0 +1,7 @@
+<% content_for :page_title, "New Product" %>
+
+<%= render "shared/page_header", title: "New Product", subtitle: "Add a new product to inventory" %>
+
+<div class="bg-white rounded-lg shadow-sm border border-slate-200 p-6">
+  <%= render "form", product: @product %>
+</div>

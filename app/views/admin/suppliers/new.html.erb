@@ -1,0 +1,7 @@
+<% content_for :page_title, "New Supplier" %>
+
+<%= render "shared/page_header", title: "New Supplier", subtitle: "Add a new supplier" %>
+
+<div class="bg-white rounded-lg shadow-sm border border-slate-200 p-6">
+  <%= render "form", supplier: @supplier %>
+</div>

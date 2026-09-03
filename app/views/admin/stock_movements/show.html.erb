@@ -1,0 +1,62 @@
+<% content_for :page_title, "Stock Movement Details" %>
+
+<div class="mb-6">
+  <div class="flex items-center justify-between">
+    <div>
+      <nav class="text-sm text-slate-500 mb-1">
+        <%= link_to "Stock Movements", admin_stock_movements_path, class: "hover:text-indigo-600" %>
+        <span class="mx-1">/</span>
+        <span class="text-slate-700">Movement #<%= @stock_movement.id %></span>
+      </nav>
+      <h1 class="text-2xl font-bold text-slate-900">Stock Movement Details</h1>
+    </div>
+    <div>
+      <%= link_to admin_stock_movements_path, class: "inline-flex items-center px-4 py-2 border border-slate-300 rounded-md shadow-sm text-sm font-medium text-slate-700 bg-white hover:bg-slate-50" do %>
+        <i class="fas fa-arrow-left mr-2"></i> Back
+      <% end %>
+    </div>
+  </div>
+</div>
+
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+  <div>
+    <%= render "shared/card", title: "Movement Information" do %>
+      <dl class="space-y-4">
+        <div>
+          <dt class="text-sm font-medium text-slate-500">Product</dt>
+          <dd class="mt-1 text-sm text-slate-900"><%= @stock_movement.product&.name || "—" %></dd>
+        </div>
+        <div>
+          <dt class="text-sm font-medium text-slate-500">Type</dt>
+          <dd class="mt-1">
+            <% if @stock_movement.movement_type == 'stock_in' %>
+              <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">Stock In</span>
+            <% else %>
+              <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">Stock Out</span>
+            <% end %>
+          </dd>
+        </div>
+        <div>
+          <dt class="text-sm font-medium text-slate-500">Quantity</dt>
+          <dd class="mt-1 text-sm text-slate-900"><%= @stock_movement.quantity %></dd>
+        </div>
+        <div>
+          <dt class="text-sm font-medium text-slate-500">Reason</dt>
+          <dd class="mt-1 text-sm text-slate-900"><%= @stock_movement.reason.presence || "—" %></dd>
+        </div>
+        <div>
+          <dt class="text-sm font-medium text-slate-500">Recorded At</dt>
+          <dd class="mt-1 text-sm text-slate-900"><%= @stock_movement.created_at.strftime("%b %d, %Y %H:%M:%S") %></dd>
+        </div>
+      </dl>
+    <% end %>
+  </div>
+  <div>
+    <%= render "shared/card", title: "Current Product Stock" do %>
+      <div class="text-center">
+        <p class="text-sm text-slate-500">Current Quantity</p>
+        <p class="mt-2 text-3xl font-bold text-slate-900"><%= @stock_movement.product&.stock_quantity %></p>
+      </div>
+    <% end %>
+  </div>
+</div>

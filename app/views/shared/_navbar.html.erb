@@ -1,0 +1,26 @@
+<%# app/views/shared/_navbar.html.erb %>
+<header class="sticky top-0 z-10 bg-white border-b border-slate-200 shadow-sm">
+  <div class="flex items-center justify-between h-16 px-4 sm:px-6 lg:px-8">
+    
+    <!-- Mobile menu button -->
+    <button
+      type="button"
+      class="lg:hidden p-2 rounded-md text-slate-500 hover:text-slate-700 focus:outline-none"
+      data-action="click->sidebar#toggle"
+    >
+      <i class="fas fa-bars text-xl"></i>
+    </button>
+
+    <div class="hidden sm:block">
+    </div>  
+
+    <div class="flex items-center space-x-4">
+      <div class="flex items-center space-x-2">
+        <div class="h-8 w-8 rounded-full bg-indigo-500 flex items-center justify-center text-white text-sm font-medium">
+          AD
+        </div>
+        <span class="hidden sm:block text-sm font-medium text-slate-700">Administrator</span>
+      </div>
+    </div>
+  </div>
+</header>

@@ -1,0 +1,44 @@
+@keyframes flashFadeOut {
+  0% {
+    opacity: 1;
+    max-height: 200px; /* large enough to show full message */
+    padding-top: 0.75rem;
+    padding-bottom: 0.75rem;
+    border-width: 1px;
+    margin-bottom: 1rem;
+  }
+  100% {
+    opacity: 0;
+    max-height: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+    border-width: 0;
+    margin-bottom: 0;
+    /* optionally set visibility to hidden after animation ends */
+    visibility: hidden;
+  }
+}
+
+.flash-auto-dismiss {
+  animation: flashFadeOut 0.3s ease-in-out 1.5s forwards;
+}
+
+@media print {
+  @page {
+    size: landscape;
+    margin: 10mm;
+  }
+
+  table {
+    font-size: 10pt;
+  }
+
+  th, td {
+    padding: 4px 6px !important;
+    white-space: normal !important;
+  }
+
+  .print\:overflow-visible {
+    overflow: visible !important;
+  }
+}

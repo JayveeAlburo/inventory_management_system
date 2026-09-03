@@ -1,0 +1,79 @@
+<% content_for :page_title, "Suppliers" %>
+
+<%= render "shared/page_header", title: "Suppliers", subtitle: "Manage your suppliers" do %>
+  <%= render "shared/button", label: "New Supplier", icon: "fa-plus", variant: "primary", size: "md", path: new_admin_supplier_path %>
+<% end %>
+
+<% if @suppliers.any? %>
+  <div class="bg-white rounded-lg shadow-sm border border-slate-200 overflow-hidden">
+    <div class="overflow-x-auto">
+      <table class="min-w-full divide-y divide-slate-200">
+        <thead class="bg-slate-50">
+          <tr>
+            <th class="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Company</th>
+            <th class="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Contact Person</th>
+            <th class="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Email</th>
+            <th class="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Phone</th>
+            <th class="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Status</th>
+            <th class="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Products</th>
+            <th class="px-4 py-3 text-right text-xs font-medium text-slate-500 uppercase tracking-wider">Actions</th>
+          </tr>
+        </thead>
+        <tbody class="bg-white divide-y divide-slate-200">
+          <% @suppliers.each do |supplier| %>
+            <tr class="hover:bg-slate-50 transition-colors">
+              <td class="px-4 py-4 whitespace-nowrap text-sm font-medium text-slate-900">
+                <%= link_to supplier.company_name, admin_supplier_path(supplier), class: "hover:text-indigo-600" %>
+              </td>
+              <td class="px-4 py-4 whitespace-nowrap text-sm text-slate-500">
+                <%= supplier.contact_person.presence || "—" %>
+              </td>
+              <td class="px-4 py-4 whitespace-nowrap text-sm text-slate-500">
+                <%= supplier.email.presence || "—" %>
+              </td>
+              <td class="px-4 py-4 whitespace-nowrap text-sm text-slate-500">
+                <%= supplier.phone.presence || "—" %>
+              </td>
+              <td class="px-4 py-4 whitespace-nowrap text-sm">
+                <% if supplier.status == 'active' %>
+                  <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                    <i class="fas fa-circle mr-1 text-green-500"></i> Active
+                  </span>
+                <% else %>
+                  <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-slate-100 text-slate-800">
+                    <i class="fas fa-circle mr-1 text-slate-400"></i> Inactive
+                  </span>
+                <% end %>
+              </td>
+              <td class="px-4 py-4 whitespace-nowrap text-sm text-slate-500">
+                <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-slate-100 text-slate-800">
+                  <%= supplier.products.size %>
+                </span>
+              </td>
+              <td class="px-4 py-4 whitespace-nowrap text-right text-sm font-medium">
+                <div class="flex justify-end space-x-2">
+                  <%= link_to admin_supplier_path(supplier), class: "text-indigo-600 hover:text-indigo-900", title: "View" do %>
+                    <i class="fas fa-eye"></i>
+                  <% end %>
+                  <%= link_to edit_admin_supplier_path(supplier), class: "text-amber-600 hover:text-amber-900", title: "Edit" do %>
+                    <i class="fas fa-edit"></i>
+                  <% end %>
+                  <%= button_to admin_supplier_path(supplier), method: :delete, class: "text-red-600 hover:text-red-900", title: "Delete", data: { turbo_confirm: "Are you sure you want to delete this supplier?" } do %>
+                    <i class="fas fa-trash"></i>
+                  <% end %>
+                </div>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+      <%= render "shared/pagination", pagy: @pagy %>
+    </div>
+  </div>
+<% else %>
+  <div class="bg-white rounded-lg shadow-sm border border-slate-200 p-8 text-center">
+    <i class="fas fa-truck text-4xl text-slate-300 mb-3"></i>
+    <p class="text-slate-500 mb-4">No suppliers yet. Add your first supplier to start tracking products.</p>
+    <%= render "shared/button", label: "New Supplier", icon: "fa-plus", variant: "primary", size: "md", path: new_admin_supplier_path %>
+  </div>
+<% end %>

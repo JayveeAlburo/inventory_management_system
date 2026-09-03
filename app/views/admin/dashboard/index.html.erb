@@ -1,0 +1,243 @@
+<% content_for :page_title, "Dashboard" %>
+
+<%= render "shared/page_header", title: "Dashboard", subtitle: "Overview of your inventory" do %>
+  <%= render "shared/button", label: "Add Product", icon: "fa-plus", variant: "primary", size: "md", path: new_admin_product_path %>
+  <%= render "shared/button", label: "Export", icon: "fa-download", variant: "secondary", size: "md", path: admin_inventory_report_path %>
+<% end %>
+
+<!-- summary Cards -->
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4 mb-6">
+  <!-- Total Products -->
+  <div class="bg-white rounded-lg shadow-sm border border-slate-200 p-4 sm:p-5 hover:shadow-md transition-shadow">
+    <div class="flex items-center">
+      <div class="p-3 rounded-full bg-blue-100 text-blue-600">
+        <i class="fas fa-cube text-xl"></i>
+      </div>
+      <div class="ml-4">
+        <p class="text-sm text-slate-500">Total Products</p>
+        <p class="text-2xl font-semibold text-slate-900"><%= @total_products %></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- total Categories -->
+  <div class="bg-white rounded-lg shadow-sm border border-slate-200 p-4 sm:p-5 hover:shadow-md transition-shadow">
+    <div class="flex items-center">
+      <div class="p-3 rounded-full bg-purple-100 text-purple-600">
+        <i class="fas fa-tags text-xl"></i>
+      </div>
+      <div class="ml-4">
+        <p class="text-sm text-slate-500">Total Categories</p>
+        <p class="text-2xl font-semibold text-slate-900"><%= @total_categories %></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- total Suppliers -->
+  <div class="bg-white rounded-lg shadow-sm border border-slate-200 p-4 sm:p-5 hover:shadow-md transition-shadow">
+    <div class="flex items-center">
+      <div class="p-3 rounded-full bg-green-100 text-green-600">
+        <i class="fas fa-truck text-xl"></i>
+      </div>
+      <div class="ml-4">
+        <p class="text-sm text-slate-500">Total Suppliers</p>
+        <p class="text-2xl font-semibold text-slate-900"><%= @total_suppliers %></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- total stock quantity -->
+  <div class="bg-white rounded-lg shadow-sm border border-slate-200 p-4 sm:p-5 hover:shadow-md transition-shadow">
+    <div class="flex items-center">
+      <div class="p-3 rounded-full bg-amber-100 text-amber-600">
+        <i class="fas fa-boxes text-xl"></i>
+      </div>
+      <div class="ml-4">
+        <p class="text-sm text-slate-500">Stock Quantity</p>
+        <p class="text-2xl font-semibold text-slate-900"><%= @total_stock_quantity %></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- low stock Products -->
+  <div class="bg-white rounded-lg shadow-sm border border-slate-200 p-4 sm:p-5 hover:shadow-md transition-shadow">
+    <div class="flex items-center">
+      <div class="p-3 rounded-full bg-orange-100 text-orange-600">
+        <i class="fas fa-exclamation-triangle text-xl"></i>
+      </div>
+      <div class="ml-4">
+        <p class="text-sm text-slate-500">Low Stock</p>
+        <p class="text-2xl font-semibold text-slate-900"><%= @low_stock_count %></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- out-of-stock Products -->
+  <div class="bg-white rounded-lg shadow-sm border border-slate-200 p-4 sm:p-5 hover:shadow-md transition-shadow">
+    <div class="flex items-center">
+      <div class="p-3 rounded-full bg-red-100 text-red-600">
+        <i class="fas fa-times-circle text-xl"></i>
+      </div>
+      <div class="ml-4">
+        <p class="text-sm text-slate-500">Out of Stock</p>
+        <p class="text-2xl font-semibold text-slate-900"><%= @out_of_stock_count %></p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- inventory summary -->
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-6">
+  <div class="lg:col-span-2">
+    <%= render "shared/card", title: "Inventory Summary" do %>
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+        <div class="text-center">
+          <p class="text-sm text-slate-500">Total Products</p>
+          <p class="text-xl font-bold"><%= @total_products %></p>
+        </div>
+        <div class="text-center">
+          <p class="text-sm text-slate-500">Total Inventory Qty</p>
+          <p class="text-xl font-bold"><%= @total_stock_quantity %></p>
+        </div>
+        <div class="text-center">
+          <p class="text-sm text-slate-500">Low Stock</p>
+          <p class="text-xl font-bold text-orange-600"><%= @low_stock_count %></p>
+        </div>
+        <div class="text-center">
+          <p class="text-sm text-slate-500">Out of Stock</p>
+          <p class="text-xl font-bold text-red-600"><%= @out_of_stock_count %></p>
+        </div>
+      </div>
+    <% end %>
+  </div>
+  <div>
+    <%= render "shared/card", title: "Quick Actions" do %>
+      <div class="space-y-2">
+        <%= link_to new_admin_product_path, class: "flex items-center text-sm text-slate-700 hover:text-indigo-600 py-2" do %>
+          <i class="fas fa-plus-circle mr-2"></i> Add Product
+        <% end %>
+        <%= link_to new_in_admin_stock_movements_path, class: "flex items-center text-sm text-slate-700 hover:text-indigo-600 py-2" do %>
+          <i class="fas fa-exchange-alt mr-2"></i> Record Stock Movement
+        <% end %>
+        <%= link_to admin_inventory_report_path, class: "flex items-center text-sm text-slate-700 hover:text-indigo-600 py-2" do %>
+          <i class="fas fa-file-export mr-2"></i> Generate Report
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+</div>
+
+<!-- recent products and recent stock movements -->
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-6">
+  <!-- recent products -->
+  <div>
+    <%= render "shared/card", title: "Recent Products" do %>
+      <% if @recent_products.any? %>
+        <div class="overflow-x-auto -mx-4 sm:mx-0">
+          <table class="min-w-full divide-y divide-slate-200">
+            <thead class="bg-slate-50">
+              <tr>
+                <th class="px-4 py-2 text-left text-xs font-medium text-slate-500 uppercase">Name</th>
+                <th class="px-4 py-2 text-left text-xs font-medium text-slate-500 uppercase">Category</th>
+                <th class="px-4 py-2 text-left text-xs font-medium text-slate-500 uppercase">Stock</th>
+              </tr>
+            </thead>
+            <tbody class="bg-white divide-y divide-slate-200">
+              <% @recent_products.each do |product| %>
+                <tr class="hover:bg-slate-50 transition-colors">
+                  <td class="px-4 py-2 text-sm font-medium text-slate-900"><%= product.name %></td>
+                  <td class="px-4 py-2 text-sm text-slate-500"><%= product.category&.name || "—" %></td>
+                  <td class="px-4 py-2 text-sm">
+                    <span class="<%= product.stock_quantity <= product.minimum_stock ? 'text-red-600' : 'text-slate-900' %>">
+                      <%= product.stock_quantity %>
+                    </span>
+                  </td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+      <% else %>
+        <p class="text-sm text-slate-500 py-4 text-center">No products yet.</p>
+      <% end %>
+    <% end %>
+  </div>
+
+  <!-- recent Stock Movements -->
+  <div>
+    <%= render "shared/card", title: "Recent Stock Movements" do %>
+      <% if @recent_stock_movements.any? %>
+        <div class="overflow-x-auto -mx-4 sm:mx-0">
+          <table class="min-w-full divide-y divide-slate-200">
+            <thead class="bg-slate-50">
+              <tr>
+                <th class="px-4 py-2 text-left text-xs font-medium text-slate-500 uppercase">Product</th>
+                <th class="px-4 py-2 text-left text-xs font-medium text-slate-500 uppercase">Type</th>
+                <th class="px-4 py-2 text-left text-xs font-medium text-slate-500 uppercase">Qty</th>
+                <th class="px-4 py-2 text-left text-xs font-medium text-slate-500 uppercase">Date</th>
+              </tr>
+            </thead>
+            <tbody class="bg-white divide-y divide-slate-200">
+              <% @recent_stock_movements.each do |movement| %>
+                <tr class="hover:bg-slate-50 transition-colors">
+                  <td class="px-4 py-2 text-sm font-medium text-slate-900"><%= movement.product&.name || "—" %></td>
+                  <td class="px-4 py-2 text-sm">
+                    <span class="<%= movement.movement_type == 'stock_in' ? 'text-green-600' : 'text-red-600' %>">
+                      <%= movement.movement_type == 'stock_in' ? 'Inbound' : 'Outbound' %>
+                    </span>
+                  </td>
+                  <td class="px-4 py-2 text-sm"><%= movement.quantity %></td>
+                  <td class="px-4 py-2 text-sm text-slate-500"><%= movement.created_at.strftime("%b %d, %Y %H:%M") %></td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+      <% else %>
+        <p class="text-sm text-slate-500 py-4 text-center">No movements recorded yet.</p>
+      <% end %>
+    <% end %>
+  </div>
+</div>
+
+<!-- low Stock Products -->
+<div class="mb-6">
+  <%= render "shared/card", title: "Low Stock Products" do %>
+    <% if @low_stock_products.any? %>
+      <div class="overflow-x-auto -mx-4 sm:mx-0">
+        <table class="min-w-full divide-y divide-slate-200">
+          <thead class="bg-slate-50">
+            <tr>
+              <th class="px-4 py-2 text-left text-xs font-medium text-slate-500 uppercase">Name</th>
+              <th class="px-4 py-2 text-left text-xs font-medium text-slate-500 uppercase">SKU</th>
+              <th class="px-4 py-2 text-left text-xs font-medium text-slate-500 uppercase">Supplier</th>
+              <th class="px-4 py-2 text-left text-xs font-medium text-slate-500 uppercase">Stock Qty</th>
+              <th class="px-4 py-2 text-left text-xs font-medium text-slate-500 uppercase">Min Stock</th>
+              <th class="px-4 py-2 text-left text-xs font-medium text-slate-500 uppercase">Status</th>
+            </tr>
+          </thead>
+          <tbody class="bg-white divide-y divide-slate-200">
+            <% @low_stock_products.each do |product| %>
+              <tr class="hover:bg-slate-50 transition-colors">
+                <td class="px-4 py-2 text-sm font-medium text-slate-900"><%= product.name %></td>
+                <td class="px-4 py-2 text-sm text-slate-500"><%= product.sku %></td>
+                <td class="px-4 py-2 text-sm text-slate-500"><%= product.supplier&.company_name || "—" %></td>
+                <td class="px-4 py-2 text-sm"><%= product.stock_quantity %></td>
+                <td class="px-4 py-2 text-sm"><%= product.minimum_stock %></td>
+                <td class="px-4 py-2 text-sm">
+                  <% if product.stock_quantity == 0 %>
+                    <span class="px-2 py-1 text-xs rounded-full bg-red-100 text-red-800">Out of Stock</span>
+                  <% else %>
+                    <span class="px-2 py-1 text-xs rounded-full bg-orange-100 text-orange-800">Low Stock</span>
+                  <% end %>
+                </td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    <% else %>
+      <p class="text-sm text-slate-500 py-4 text-center">No low stock products.</p>
+    <% end %>
+  <% end %>
+</div>

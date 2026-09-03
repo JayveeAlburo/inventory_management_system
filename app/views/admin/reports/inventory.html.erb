@@ -1,0 +1,196 @@
+<% content_for :page_title, "Inventory Report" %>
+
+<div class="print:hidden">
+  <%= render "shared/page_header", title: "Inventory Report", subtitle: "Overview of inventory valuation and status" do %>
+    <button onclick="window.print()" class="inline-flex items-center px-4 py-2 border border-slate-300 rounded-md shadow-sm text-sm font-medium text-slate-700 bg-white hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+      <i class="fas fa-print mr-2"></i> Print
+    </button>
+  <% end %>
+</div>
+
+<!-- Filter Card (hidden on print) -->
+<div class="print:hidden bg-white rounded-lg shadow-sm border border-slate-200 p-4 mb-6">
+  <%= form_with(url: admin_inventory_report_path, method: :get, local: true, class: "space-y-4") do |f| %>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div>
+        <%= f.label :category_id, "Category", class: "block text-sm font-medium text-slate-700 mb-1" %>
+        <%= f.select :category_id, options_from_collection_for_select(@categories, :id, :name, params[:category_id]), { include_blank: "All Categories" }, class: "p-2 block w-full rounded-md border-slate-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" %>
+      </div>
+      <div>
+        <%= f.label :supplier_id, "Supplier", class: "block text-sm font-medium text-slate-700 mb-1" %>
+        <%= f.select :supplier_id, options_from_collection_for_select(@suppliers, :id, :company_name, params[:supplier_id]), { include_blank: "All Suppliers" }, class: "p-2 block w-full rounded-md border-slate-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" %>
+      </div>
+      <div>
+        <%= f.label :stock_status, "Stock Status", class: "block text-sm font-medium text-slate-700 mb-1" %>
+        <%= f.select :stock_status, options_for_select([["In Stock", "in_stock"], ["Low Stock", "low_stock"], ["Out of Stock", "out_of_stock"]], params[:stock_status]), { include_blank: "All" }, class: "p-2 block w-full rounded-md border-slate-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" %>
+      </div>
+      <div class="flex items-end">
+        <%= button_tag type: :submit, class: "inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" do %>
+          <i class="fas fa-filter mr-2"></i> Apply Filters
+        <% end %>
+        <%= link_to "Clear", admin_inventory_report_path, class: "ml-2 inline-flex items-center px-4 py-2 border border-slate-300 rounded-md shadow-sm text-sm font-medium text-slate-700 bg-white hover:bg-slate-50 focus:outline-none" %>
+      </div>
+    </div>
+  <% end %>
+</div>
+
+<!-- Summary Cards (visible on screen, hidden on print) -->
+<div class="print:hidden grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
+  <!-- Total Products -->
+  <div class="bg-white rounded-lg shadow-sm border border-slate-200 p-4">
+    <div class="flex items-center">
+      <div class="p-3 rounded-full bg-blue-100 text-blue-600">
+        <i class="fas fa-cube text-xl"></i>
+      </div>
+      <div class="ml-4">
+        <p class="text-sm text-slate-500">Total Products</p>
+        <p class="text-2xl font-semibold text-slate-900"><%= @total_products %></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Total Stock Quantity -->
+  <div class="bg-white rounded-lg shadow-sm border border-slate-200 p-4">
+    <div class="flex items-center">
+      <div class="p-3 rounded-full bg-amber-100 text-amber-600">
+        <i class="fas fa-boxes text-xl"></i>
+      </div>
+      <div class="ml-4">
+        <p class="text-sm text-slate-500">Total Stock Qty</p>
+        <p class="text-2xl font-semibold text-slate-900"><%= @total_stock_quantity %></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Inventory Cost -->
+  <div class="bg-white rounded-lg shadow-sm border border-slate-200 p-4">
+    <div class="flex items-center">
+      <div class="p-3 rounded-full bg-emerald-100 text-emerald-600">
+        <i class="fas fa-peso-sign text-xl"></i>
+      </div>
+      <div class="ml-4">
+        <p class="text-sm text-slate-500">Inventory Cost</p>
+        <p class="text-2xl font-semibold text-slate-900"><%= number_to_currency(@total_inventory_cost, unit: "₱") %></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Potential Sales -->
+  <div class="bg-white rounded-lg shadow-sm border border-slate-200 p-4">
+    <div class="flex items-center">
+      <div class="p-3 rounded-full bg-purple-100 text-purple-600">
+        <i class="fas fa-chart-line text-xl"></i>
+      </div>
+      <div class="ml-4">
+        <p class="text-sm text-slate-500">Potential Sales</p>
+        <p class="text-2xl font-semibold text-slate-900"><%= number_to_currency(@total_potential_sales, unit: "₱") %></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Low Stock -->
+  <div class="bg-white rounded-lg shadow-sm border border-slate-200 p-4">
+    <div class="flex items-center">
+      <div class="p-3 rounded-full bg-orange-100 text-orange-600">
+        <i class="fas fa-exclamation-triangle text-xl"></i>
+      </div>
+      <div class="ml-4">
+        <p class="text-sm text-slate-500">Low Stock</p>
+        <p class="text-2xl font-semibold text-slate-900"><%= @low_stock_count %></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Out of Stock -->
+  <div class="bg-white rounded-lg shadow-sm border border-slate-200 p-4">
+    <div class="flex items-center">
+      <div class="p-3 rounded-full bg-red-100 text-red-600">
+        <i class="fas fa-times-circle text-xl"></i>
+      </div>
+      <div class="ml-4">
+        <p class="text-sm text-slate-500">Out of Stock</p>
+        <p class="text-2xl font-semibold text-slate-900"><%= @out_of_stock_count %></p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- print-only -->
+<div class="hidden print:block mb-6">
+  <h2 class="text-xl font-bold text-black mb-2">Inventory Summary</h2>
+  <table class="min-w-full border border-black text-sm">
+    <tbody>
+      <tr class="border-b border-black">
+        <td class="px-3 py-2 font-medium">Total Products</td>
+        <td class="px-3 py-2 text-right"><%= @total_products %></td>
+      </tr>
+      <tr class="border-b border-black">
+        <td class="px-3 py-2 font-medium">Total Stock Quantity</td>
+        <td class="px-3 py-2 text-right"><%= @total_stock_quantity %></td>
+      </tr>
+      <tr class="border-b border-black">
+        <td class="px-3 py-2 font-medium">Total Inventory Cost</td>
+        <td class="px-3 py-2 text-right"><%= number_to_currency(@total_inventory_cost, unit: "₱") %></td>
+      </tr>
+      <tr class="border-b border-black">
+        <td class="px-3 py-2 font-medium">Potential Sales Value</td>
+        <td class="px-3 py-2 text-right"><%= number_to_currency(@total_potential_sales, unit: "₱") %></td>
+      </tr>
+      <tr class="border-b border-black">
+        <td class="px-3 py-2 font-medium">Low Stock Products</td>
+        <td class="px-3 py-2 text-right"><%= @low_stock_count %></td>
+      </tr>
+      <tr>
+        <td class="px-3 py-2 font-medium">Out-of-Stock Products</td>
+        <td class="px-3 py-2 text-right"><%= @out_of_stock_count %></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- product report table -->
+<div class="bg-white rounded-lg shadow-sm border border-slate-200 overflow-hidden print:shadow-none print:border-black">
+  <div class="px-4 py-3 border-b border-slate-200 bg-slate-50 print:bg-white print:border-black">
+    <h3 class="text-lg font-medium text-slate-800 print:text-black">Product Inventory Report</h3>
+  </div>
+  <div class="overflow-x-auto print:overflow-visible">
+  <table class="min-w-full divide-y divide-slate-200 print:divide-black print:text-xs">
+    <thead class="bg-slate-50 print:bg-white">
+      <tr>
+        <th class="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider print:text-black print:whitespace-normal">Product</th>
+        <th class="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider print:text-black print:whitespace-normal">SKU</th>
+        <th class="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider print:text-black print:whitespace-normal">Category</th>
+        <th class="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider print:text-black print:whitespace-normal">Supplier</th>
+        <th class="px-4 py-3 text-right text-xs font-medium text-slate-500 uppercase tracking-wider print:text-black print:whitespace-normal">Cost Price</th>
+        <th class="px-4 py-3 text-right text-xs font-medium text-slate-500 uppercase tracking-wider print:text-black print:whitespace-normal">Selling Price</th>
+        <th class="px-4 py-3 text-right text-xs font-medium text-slate-500 uppercase tracking-wider print:text-black print:whitespace-normal">Stock</th>
+        <th class="px-4 py-3 text-right text-xs font-medium text-slate-500 uppercase tracking-wider print:text-black print:whitespace-normal">Inventory Value</th>
+        <th class="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider print:text-black print:whitespace-normal">Status</th>
+      </tr>
+    </thead>
+    <tbody class="bg-white divide-y divide-slate-200 print:divide-black">
+      <% @products.each do |product| %>
+        <tr class="hover:bg-slate-50 transition-colors print:hover:bg-white">
+          <td class="px-4 py-4 whitespace-nowrap text-sm font-medium text-slate-900 print:text-black print:whitespace-normal print:text-xs"><%= product.name %></td>
+          <td class="px-4 py-4 whitespace-nowrap text-sm text-slate-500 print:text-black print:whitespace-normal print:text-xs"><%= product.sku %></td>
+          <td class="px-4 py-4 whitespace-nowrap text-sm text-slate-500 print:text-black print:whitespace-normal print:text-xs"><%= product.category&.name || "—" %></td>
+          <td class="px-4 py-4 whitespace-nowrap text-sm text-slate-500 print:text-black print:whitespace-normal print:text-xs"><%= product.supplier&.company_name || "—" %></td>
+          <td class="px-4 py-4 whitespace-nowrap text-sm text-right text-slate-500 print:text-black print:whitespace-normal print:text-xs"><%= number_to_currency(product.cost_price, unit: "₱ ") %></td>
+          <td class="px-4 py-4 whitespace-nowrap text-sm text-right text-slate-500 print:text-black print:whitespace-normal print:text-xs"><%= number_to_currency(product.selling_price, unit: "₱ ") %></td>
+          <td class="px-4 py-4 whitespace-nowrap text-sm text-right font-medium print:text-black print:whitespace-normal print:text-xs"><%= product.stock_quantity %></td>
+          <td class="px-4 py-4 whitespace-nowrap text-sm text-right font-medium print:text-black print:whitespace-normal print:text-xs"><%= number_to_currency(product.cost_price * product.stock_quantity, unit: "₱ ") %></td>
+          <td class="px-4 py-4 whitespace-nowrap text-sm print:text-black print:whitespace-normal print:text-xs">
+            <%# status badges %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>
+  <% if @products.empty? %>
+    <div class="p-8 text-center text-slate-500 print:text-black">
+      <i class="fas fa-box-open text-4xl text-slate-300 mb-3 print:text-black"></i>
+      <p>No products match the selected filters.</p>
+    </div>
+  <% end %>
+</div>

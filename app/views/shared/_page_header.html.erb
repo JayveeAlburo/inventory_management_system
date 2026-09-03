@@ -1,0 +1,15 @@
+<div class="mb-6">
+  <div class="flex items-center justify-between">
+    <div>
+      <h1 class="text-2xl font-bold text-slate-900"><%= title %></h1>
+      <% if defined?(subtitle) && subtitle.present? %>
+        <p class="mt-1 text-sm text-slate-500"><%= subtitle %></p>
+      <% end %>
+    </div>
+    <% if block_given? %>
+      <div class="flex space-x-2">
+        <%= yield %>
+      </div>
+    <% end %>
+  </div>
+</div>
